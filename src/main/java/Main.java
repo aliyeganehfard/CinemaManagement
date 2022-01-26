@@ -2,6 +2,9 @@
 
 import Exceptions.*;
 import model.*;
+import service.AdminService;
+import service.CinemaService;
+import service.MemberService;
 import utils.*;
 
 import java.sql.*;
@@ -17,6 +20,10 @@ public class Main {
         MovieRepository movieRepository = new MovieRepository();
         BookingMovieRepository bookingMovieRepository = new BookingMovieRepository();
         MovieIncomeRepository movieIncomeRepository = new MovieIncomeRepository();
+
+        AdminService adminService = new AdminService();
+        CinemaService cinemaService = new CinemaService();
+        MemberService memberService = new MemberService();
         boolean state = true;
         boolean flag = false;
         boolean cinemaState = true;
@@ -39,7 +46,8 @@ public class Main {
                         commend = commendLine.trim().split(" ");
                         try {
                             ExceptionHandling.isWord(commend[2]);
-                            adminRepository.singUp(new Admin(commend[0], commend[1], commend[2], commend[3]));
+//                            adminRepository.singUp(new Admin(commend[0], commend[1], commend[2], commend[3]));
+                            adminService.singUp(new Admin(commend[0], commend[1], commend[2], commend[3]));
                         } catch (WordException wordException) {
                             System.out.println("incorrect name!");
                         } catch (Exception a) {
@@ -54,8 +62,8 @@ public class Main {
                             ExceptionHandling.isWord(commend[2]);
                             ExceptionHandling.isCinemaName(commend[3]);
                             ExceptionHandling.isPhoneNumber(commend[4]);
-
-                            cinemaRepository.singUp(new Cinema(commend[0], commend[1], commend[2], commend[3], commend[4], commend[5]));
+                            cinemaService.singUp(new Cinema(commend[0], commend[1], commend[2], commend[3], commend[4], commend[5]));
+//                            cinemaRepository.singUp(new Cinema(commend[0], commend[1], commend[2], commend[3], commend[4], commend[5]));
                         } catch (CinemaNameException cinemaNameException) {
                             System.out.println("incorrect cinema name!");
                         } catch (WordException wordException) {
@@ -77,6 +85,8 @@ public class Main {
                             ExceptionHandling.isWord(commend[2]);
                             ExceptionHandling.isPhoneNumber(commend[3]);
                             ExceptionHandling.isMoney(commend[5]);
+//                            memberRepository.singUp(new Member(commend[0], commend[1], commend[2], commend[3], commend[4], Double.parseDouble(commend[5])));
+                            memberService.singUp(new Member(commend[0], commend[1], commend[2], commend[3], commend[4], Double.parseDouble(commend[5])));
                         } catch (WordException wordException) {
                             System.out.println("incorrect name!");
                         } catch (PhoneNumberException phoneNumberException) {
@@ -86,7 +96,6 @@ public class Main {
                         } catch (Exception a) {
                             System.out.println("wrong input");
                         }
-                        memberRepository.singUp(new Member(commend[0], commend[1], commend[2], commend[3], commend[4], Double.parseDouble(commend[5])));
                         break;
                     default:
                         System.out.println("wrong commend !");
@@ -98,7 +107,12 @@ public class Main {
                         printSingIn("admin");
                         commendLine = scanner.nextLine();
                         commend = commendLine.trim().split(" ");
-                        ID = adminRepository.singIn(commend[0], commend[1]);
+//                        ID = adminRepository.singIn(commend[0], commend[1]);
+                        try{
+                            ID = adminService.singIn(commend[0], commend[1]);
+                        }catch (Exception e){
+                            System.out.println("wrong input!");
+                        }
                         if (ID != -1) {
                             flag = true;
                             accountType = 1;
@@ -111,7 +125,12 @@ public class Main {
                         printSingIn("cinema");
                         commendLine = scanner.nextLine();
                         commend = commendLine.trim().split(" ");
-                        ID = cinemaRepository.singIn(commend[0], commend[1]);
+//                        ID = cinemaRepository.singIn(commend[0], commend[1]);
+                        try {
+                            ID = cinemaService.singIn(commend[0], commend[1]);
+                        }catch (Exception e){
+                            System.out.println("wrong input!");
+                        }
                         if (ID != -1) {
                             flag = true;
                             accountType = 2;
@@ -129,7 +148,12 @@ public class Main {
                         printSingIn("member");
                         commendLine = scanner.nextLine();
                         commend = commendLine.trim().split(" ");
-                        ID = memberRepository.singIN(commend[0], commend[1]);
+//                        ID = memberRepository.singIN(commend[0], commend[1]);
+                        try{
+                            ID = memberService.singIn(commend[0], commend[1]);
+                        }catch (Exception e){
+                            System.out.println("wrong input!");
+                        }
                         if (ID != -1) {
                             accountType = 3;
                             flag = true;
@@ -154,10 +178,12 @@ public class Main {
                         commend = commendLine.trim().split(" ");
                         switch (commend[0]) {
                             case "showMovies":
-                                movieRepository.showAllMovies();
+//                                movieRepository.showAllMovies();
+                                cinemaService.showAllMovies();
                                 break;
                             case "showMembers":
-                                memberRepository.showAllMember();
+//                                memberRepository.showAllMember();
+                                memberService.showAllMember();
                                 break;
                             case "showRequestCinemas":
                                 cinemaRepository.cinemasRequest();
@@ -185,7 +211,8 @@ public class Main {
 
                                 break;
                             case "showIncomeMovies":
-                                movieIncomeRepository.showMoviesIncome();
+//                                movieIncomeRepository.showMoviesIncome();
+                                cinemaService.showMoviesIncome();
                                 break;
                             case "help":
                                 printAdminMenu();
@@ -210,13 +237,16 @@ public class Main {
                             commend = commendLine.trim().split(" ");
                             switch (commend[0]) {
                                 case "showProfile":
-                                    cinemaRepository.showProfile(ID);
+//                                    cinemaRepository.showProfile(ID);
+                                    cinemaService.showProfile(ID);
                                     break;
                                 case "showCinemaMovies":
-                                    cinemaRepository.showCinemaMovies(ID);
+//                                    cinemaRepository.showCinemaMovies(ID);
+                                    cinemaService.showCinemaMovies(ID);
                                     break;
                                 case "showIncomeMovies":
-                                    movieIncomeRepository.showMoviesIncome(ID);
+//                                    movieIncomeRepository.showMoviesIncome(ID);
+                                    cinemaService.showMoviesIncome(ID);
                                     break;
                                 case "addMovie":
                                     try {
@@ -225,7 +255,9 @@ public class Main {
                                         Time time = Time.valueOf(commend[3]);
                                         ExceptionHandling.isMoney(commend[5]);
                                         ExceptionHandling.isDigit(commend[4]);
-                                        movieRepository.addNewMovie(new Movie(ID, commend[1], Date.valueOf(commend[2]),
+//                                        movieRepository.addNewMovie(new Movie(ID, commend[1], Date.valueOf(commend[2]),
+//                                                time, Integer.valueOf(commend[4]), Double.parseDouble(commend[5])));
+                                        cinemaService.addNewMovies(new Movie(ID, commend[1], Date.valueOf(commend[2]),
                                                 time, Integer.valueOf(commend[4]), Double.parseDouble(commend[5])));
                                     } catch (TitleException titleException) {
                                         System.out.println("incorrect title!");
@@ -245,9 +277,12 @@ public class Main {
                                 case "cancelMovie":
                                     try {
                                         ExceptionHandling.isDigit(commend[1]);
-                                        movieRepository.cancelDisplay(Integer.valueOf(commend[1]));
+//                                        movieRepository.cancelDisplay(Integer.valueOf(commend[1]));
+                                        cinemaService.cancelDisplay(commend[1]);
                                     } catch (DigitException digitException) {
                                         System.out.println("incorrect id!");
+                                    } catch (Exception e){
+                                        System.out.println("wrong input!");
                                     }
                                     break;
                                 case "help":
@@ -291,29 +326,38 @@ public class Main {
                         commend = commendLine.trim().split(" ");
                         switch (commend[0]) {
                             case "showProfile":
-                                memberRepository.showProfile(ID);
+//                                memberRepository.showProfile(ID);
+                                memberService.showProfile(ID);
                                 break;
                             case "chargeWallet":
                                 try {
                                     ExceptionHandling.isMoney(commend[1]);
-                                    memberRepository.chargeWallet(ID, Double.parseDouble(commend[1]));
+//                                    memberRepository.chargeWallet(ID, Double.parseDouble(commend[1]));
+                                    memberService.chargeWallet(ID,commend[1]);
                                 } catch (MoneyException moneyException) {
                                     System.out.println("incorrect money!");
+                                } catch (Exception e){
+                                    System.out.println("wrong input!");
                                 }
                                 break;
                             case "showWallet":
-                                System.out.println(memberRepository.getAmountWallet(ID));
+//                                System.out.println(memberRepository.getAmountWallet(ID));
+                                memberService.getAmountWallet(ID);
                                 break;
                             case "showMovies":
-                                movieRepository.showAllMovies();
+//                                movieRepository.showAllMovies();
+                                cinemaService.showAllMovies();
                                 break;
                             case "showBooked":
-                                bookingMovieRepository.bookedMovies(ID);
+//                                bookingMovieRepository.bookedMovies(ID);
+                                memberService.bookingMovie(ID);
                                 break;
                             case "reserveMovie":
                                 try {
                                     ExceptionHandling.isDigit(commend[1]);
                                     ExceptionHandling.isMoney(commend[2]);
+//                                    bookingMovieRepository.bookingMovie(Integer.valueOf(commend[1]), ID, Integer.parseInt(commend[2]));
+                                    memberService.bookingMovie(commend[1], ID,commend[2]);
                                 } catch (MoneyException moneyException) {
                                     System.out.println("incorrect number!");
                                 } catch (DigitException digitException) {
@@ -321,20 +365,23 @@ public class Main {
                                 } catch (Exception a) {
                                     System.out.println("wrong input");
                                 }
-                                bookingMovieRepository.bookingMovie(Integer.valueOf(commend[1]), ID, Integer.parseInt(commend[2]));
                                 break;
                             case "searchByTitle":
                                 try {
                                     ExceptionHandling.isTitle(commend[1]);
-                                    movieRepository.searchMovieByTitle(commend[1]);
+//                                    movieRepository.searchMovieByTitle(commend[1]);
+                                    cinemaService.searchMovieByTitle(commend[1]);
                                 } catch (TitleException titleException) {
                                     System.out.println("incorrect title!");
+                                } catch (Exception e){
+                                    System.out.println("wrong input!");
                                 }
                                 break;
                             case "searchByDate":
                                 try {
                                     ExceptionHandling.isDate(commend[1]);
-                                    movieRepository.searchMovieByDate(Date.valueOf(commend[1]));
+//                                    movieRepository.searchMovieByDate(Date.valueOf(commend[1]));
+                                    cinemaService.searchMovieBeDate(commend[1]);
                                 } catch (DateException dateException) {
                                     System.out.println("incorrect date!");
                                 } catch (Exception a) {
