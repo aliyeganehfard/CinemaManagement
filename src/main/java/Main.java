@@ -2,9 +2,9 @@
 
 import Exceptions.*;
 import model.*;
-import service.AdminService;
-import service.CinemaService;
-import service.MemberService;
+import controller.AdminService;
+import controller.CinemaService;
+import controller.MemberService;
 import utils.*;
 
 import java.sql.*;
